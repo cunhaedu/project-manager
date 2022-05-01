@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id       String @id
+  name     String
+  email    String @unique
+  password String
+  cnpj     String @unique
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  users          User[]
+  projects       Project[]
+  taskCategories TaskCategory[]
+
+  @@map("company")
+}
+
+model User {
+  id       String  @id
+  name     String
+  email    String  @unique
+  password String
+  position String?
+  city     String?
+  state    String?
+  image    String?
+
+  company    Company @relation(fields: [company_id], references: [id])
+  company_id String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  responsibleTasks Task[]        @relation("taskResponsible")
+  createdTasks     Task[]        @relation("taskCreator")
+  comments         TaskComment[]
+
+  @@map("user")
+}
+
+model Project {
+  id          String  @id
+  name        String
+  description String
+  icon        String? @unique
+
+  company    Company @relation(fields: [company_id], references: [id])
+  company_id String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  sprints projectSprint[]
+
+  ProjectScope ProjectScope[]
+  @@map("project")
+}
+
+model projectSprint {
+  id          String  @id
+  name        String
+  description String?
+
+  initial_date DateTime @default(now())
+  deadline     DateTime
+
+  project    Project @relation(fields: [project_id], references: [id])
+  project_id String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  tasks Task[]
+
+  @@map("project_sprint")
+}
+
+model ProjectScope {
+  id   String @id
+  name String
+
+  project    Project @relation(fields: [project_id], references: [id])
+  project_id String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  tasks Task[]
+
+  @@map("project_scope")
+}
+
+model TaskType {
+  id          String  @id
+  description String
+  icon        String?
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  tasks Task[]
+
+  @@map("task_type")
+}
+
+model TaskCategory {
+  id   String @id
+  name String
+
+  company    Company @relation(fields: [company_id], references: [id])
+  company_id String
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  tasks Task[]
+
+  @@map("task_category")
+}
+
+enum TaskStatus {
+  PLANNED
+  ON_GOING
+  CONCLUDED
+  PAUSED
+}
+
+model Task {
+  id               String  @id
+  name             String
+  description      String?
+  estimated_points Int?
+
+  status TaskStatus @default(PLANNED)
+
+  responsible    User?  @relation(fields: [responsible_id], references: [id], name: "taskResponsible")
+  responsible_id String
+
+  creator    User   @relation(fields: [creator_id], references: [id], name: "taskCreator")
+  creator_id String
+
+  category         TaskCategory? @relation(fields: [task_category_id], references: [id])
+  task_category_id String?
+
+  type         TaskType? @relation(fields: [task_type_id], references: [id])
+  task_type_id String?
+
+  scope         ProjectScope? @relation(fields: [task_scope_id], references: [id])
+  task_scope_id String?
+
+  parent    Task?   @relation(fields: [parent_id], references: [id], name: "taskParent")
+  parent_id String?
+
+  sprint            projectSprint? @relation(fields: [project_sprint_id], references: [id])
+  project_sprint_id String?
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  comments TaskComment[]
+  children Task[]        @relation("taskParent")
+
+  @@map("task")
+}
+
+model TaskComment {
+  id   String @id
+  name String
+
+  task    Task   @relation(fields: [task_id], references: [id])
+  task_id String
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  parent    TaskComment? @relation(fields: [parent_id], references: [id], name: "commentParent")
+  parent_id String?
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @default(now()) @updatedAt
+  deleted_at DateTime?
+
+  children TaskComment[] @relation("commentParent")
+
+  @@map("task_comment")
+}
