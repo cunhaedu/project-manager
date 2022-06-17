@@ -21,18 +21,11 @@
     "checkJs": true,
     "diagnostics": true,
     "paths": {
-      "@modules/*": [
-        "modules/*"
-      ],
-      "@infra/*": [
-        "infra/*"
-      ],
-      "@config/*": [
-        "config/*"
-      ],
-      "@core/*": [
-        "core/*"
-      ]
+      "@modules/*": ["modules/*"],
+      "@infra/*": ["infra/*"],
+      "@config/*": ["config/*"],
+      "@core/*": ["core/*"],
+      "@test/*": ["test/*"]
     },
     "typeRoots": [
       "@types",

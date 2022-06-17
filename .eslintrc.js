@@ -23,17 +23,19 @@ module.exports = {
     'no-console': 'off',
     'no-process-env': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '_' }],
-    '@typescript-eslint/naming-convention': [
-      'error',
-      {
-        selector: 'interface',
-        format: ['PascalCase'],
-        custom: {
-          regex: '^I[A-Z]',
-          match: true,
-        },
-      },
-    ],
+    '@typescript-eslint/no-explicit-any': 'off',
+    'no-underscore-dangle': 'off',
+    // '@typescript-eslint/naming-convention': [
+    //   'error',
+    //   {
+    //     selector: 'interface',
+    //     format: ['PascalCase'],
+    //     custom: {
+    //       regex: '^I[A-Z]',
+    //       match: true,
+    //     },
+    //   },
+    // ],
     'import/extensions': ['error', 'ignorePackages', { ts: 'never' }],
   },
   settings: {

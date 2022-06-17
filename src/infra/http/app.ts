@@ -4,7 +4,6 @@ import express from 'express';
 import cors from 'cors';
 import { config } from 'dotenv-flow';
 
-import '@infra/container';
 import { errorsHandler } from '@core/domain/errors/handlers/ErrorsHandler';
 import { routes } from './routes';
 
