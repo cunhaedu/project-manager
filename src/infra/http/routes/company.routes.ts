@@ -1,9 +1,9 @@
-// import { CreateCompanyController } from '@modules/companies/useCases/createCompany/CreateCompanyController';
 import { Router } from 'express';
+import { adaptRoute } from '@core/infra/adapters/ExpressRouteAdapter';
+import { makeCreateCompanyController } from '@infra/http/factories/controllers/CreateCompanyControllerFactory';
 
 const companyRoutes = Router();
-// const createCompanyController = new CreateCompanyController();
-//
-// companyRoutes.post('/', createCompanyController.handle);
+
+companyRoutes.post('/', adaptRoute(makeCreateCompanyController()));
 
 export { companyRoutes };

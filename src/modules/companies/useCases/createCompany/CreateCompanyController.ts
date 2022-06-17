@@ -25,7 +25,7 @@ export class CreateCompanyController {
     try {
       const validationResult = this.validator.validate(request);
 
-      if (validationResult.isLeft()) {
+      if (validationResult?.isLeft()) {
         return clientError(validationResult.value);
       }
 
