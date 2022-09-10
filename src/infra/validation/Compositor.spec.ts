@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest';
+
 import { CompareFieldsValidator } from './CompareFieldsValidator';
 import { ValidatorCompositor } from './Compositor';
 import { RequiredFieldsValidator } from './RequiredFieldsValidator';

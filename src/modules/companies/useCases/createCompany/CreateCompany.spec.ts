@@ -1,39 +1,42 @@
+import { it, describe, beforeEach, expect } from 'vitest';
+
 import { ICompanyRepository } from '@modules/companies/repositories/ICompanyRepository';
 import { CreateCompany } from '@modules/companies/useCases/createCompany/CreateCompany';
 import { InMemoryCompanyRepository } from '@modules/companies/repositories/in-memory/InMemoryCompanyRepository';
 import { CompanyAlreadyExistsError } from '@modules/companies/useCases/createCompany/errors/CompanyAlreadyExistsError';
 import { createCompanyTestFactory } from '@test/factories/CompanyFactory';
+import { Right } from '@core/logic/Right';
+import { Left } from '@core/logic/Left';
 
-describe('Register User', () => {
+describe('Register Company', () => {
   let companyRepository: ICompanyRepository;
-  let createCompany: CreateCompany;
+  let sut: CreateCompany;
 
   beforeEach(() => {
     companyRepository = new InMemoryCompanyRepository();
-    createCompany = new CreateCompany(companyRepository);
+    sut = new CreateCompany(companyRepository);
   });
 
   it('should be able to register new company', async () => {
-    const response = await createCompany.execute({
-      name: 'John Doe',
-      email: 'john@doe.com',
-      password: '123456',
-      cnpj: '96823647000192',
-    });
-
-    expect(await companyRepository.exists('john@doe.com')).toBeTruthy();
-    expect(response.isRight()).toBeTruthy();
+    expect(
+      sut.execute({
+        name: 'John Doe',
+        email: 'john@doe.com',
+        password: '123456',
+        cnpj: '96823647000192',
+      }),
+    ).resolves.toBeInstanceOf(Right);
   });
 
   it('should not be able to register new company with invalid data', async () => {
-    const response = await createCompany.execute({
-      name: 'John Doe',
-      email: 'john',
-      password: '123',
-      cnpj: '96823647',
-    });
-
-    expect(response.isLeft()).toBeTruthy();
+    expect(
+      sut.execute({
+        name: 'John Doe',
+        email: 'john',
+        password: '123',
+        cnpj: '96823647',
+      }),
+    ).resolves.toBeInstanceOf(Left);
   });
 
   it('should not be able to register new company with existing email', async () => {
@@ -43,7 +46,7 @@ describe('Register User', () => {
 
     await companyRepository.create(user);
 
-    const response = await createCompany.execute({
+    const response = await sut.execute({
       name: 'John Doe',
       email: 'john@doe.com',
       password: '123456',
@@ -61,7 +64,7 @@ describe('Register User', () => {
 
     await companyRepository.create(user);
 
-    const response = await createCompany.execute({
+    const response = await sut.execute({
       name: 'John Doe',
       email: 'john@doe.com',
       password: '123456',

@@ -1,3 +1,5 @@
+import { it, describe, expect } from 'vitest';
+
 import { Name } from './name';
 
 describe('Company name value object', () => {

@@ -1,3 +1,5 @@
+import { it, describe, expect } from 'vitest';
+
 import { Cnpj } from './cnpj';
 
 describe('Company cnpj value object', () => {

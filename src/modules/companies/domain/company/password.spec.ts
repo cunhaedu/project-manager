@@ -1,3 +1,4 @@
+import { it, describe, expect } from 'vitest';
 import bcrypt from 'bcrypt';
 
 import { Password } from './password';
@@ -62,6 +63,6 @@ describe('Company password value object', () => {
       throw new Error();
     }
 
-    expect(password.value.comparePassword('123456')).toBeTruthy();
+    expect(await password.value.comparePassword('123456')).toBeTruthy();
   });
 });

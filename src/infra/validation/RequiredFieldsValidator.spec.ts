@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest';
+
 import { RequiredFieldsValidator } from './RequiredFieldsValidator';
 
 describe('Required Fields Validator', () => {
